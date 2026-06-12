@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'dart:ui';
 
 import 'providers/game_state.dart';
+import 'models/resource.dart';
 import 'widgets/space_background.dart';
-import 'screens/collector_screen.dart';
+import 'screens/storage_screen.dart';
+import 'screens/material_collection_page.dart';
 import 'screens/refinery_screen.dart';
 import 'screens/planet_screen.dart';
 
@@ -30,7 +32,8 @@ class PlanetTerraformerApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black,
         primaryColor: const Color(0xFF00F5D4),
-        fontFamily: 'monospace', // Gives a beautiful retro-futuristic hacker-sci-fi look
+        fontFamily:
+            'monospace', // Gives a beautiful retro-futuristic hacker-sci-fi look
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white),
           bodyMedium: TextStyle(color: Colors.white70),
@@ -69,6 +72,19 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
+  ResourceType? _materialTypeFromName(String materialType) {
+    switch (materialType.toLowerCase()) {
+      case 'iron':
+        return ResourceType.iron;
+      case 'carbon':
+        return ResourceType.carbon;
+      case 'silicon':
+        return ResourceType.silicon;
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,17 +100,31 @@ class _MainLayoutState extends State<MainLayout> {
                   _currentIndex = index;
                 });
               },
-              children: const [
-                CollectorScreen(),
-                RefineryScreen(),
-                PlanetScreen(),
+              children: [
+                const StorageScreen(),
+                Consumer<GameState>(
+                  builder: (context, gameState, child) {
+                    return MaterialCollectionPage(
+                      onMaterialCollected: (materialType) {
+                        final resourceType = _materialTypeFromName(
+                          materialType,
+                        );
+                        if (resourceType == null) return;
+                        gameState.extractResource(resourceType);
+                      },
+                    );
+                  },
+                ),
+                const RefineryScreen(),
+                const PlanetScreen(),
               ],
             ),
 
             // 2. Real-time Top Terminal Notification Banner
             Consumer<GameState>(
               builder: (context, gameState, child) {
-                if (gameState.bannerMessage == null) return const SizedBox.shrink();
+                if (gameState.bannerMessage == null)
+                  return const SizedBox.shrink();
 
                 final bannerColor = Color(int.parse(gameState.bannerColorHex));
                 return Positioned(
@@ -112,13 +142,22 @@ class _MainLayoutState extends State<MainLayout> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12.0),
                             child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                              filter: ImageFilter.blur(
+                                sigmaX: 10.0,
+                                sigmaY: 10.0,
+                              ),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 12.0,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withOpacity(0.8),
                                   borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(color: bannerColor, width: 1.5),
+                                  border: Border.all(
+                                    color: bannerColor,
+                                    width: 1.5,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: bannerColor.withOpacity(0.3),
@@ -146,7 +185,7 @@ class _MainLayoutState extends State<MainLayout> {
                                             Shadow(
                                               color: bannerColor,
                                               blurRadius: 2.0,
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -164,61 +203,71 @@ class _MainLayoutState extends State<MainLayout> {
               },
             ),
 
-            // 3. Top Console Title & Control bar
+            // 3. Top Console Title & Control bar (safe for status bar)
             Positioned(
               top: 0,
               left: 0,
               right: 0,
-              child: Container(
-                height: 50.0,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.black87, Colors.transparent],
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: const [
-                        Icon(
-                          Icons.radar_rounded,
-                          color: Color(0xFF00F5D4),
-                          size: 16.0,
-                        ),
-                        SizedBox(width: 8.0),
-                        Text(
-                          'PLANET TERRAFORMER v1.0',
-                          style: TextStyle(
-                            color: Colors.white30,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ],
+              child: SafeArea(
+                bottom: false,
+                child: Container(
+                  height: 50.0,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.black87, Colors.transparent],
                     ),
-                    // Settings/Wipe database command trigger
-                    GestureDetector(
-                      onTap: () => _showResetDialog(context),
-                      child: Container(
-                        padding: const EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.04),
-                          border: Border.all(color: Colors.white24),
-                        ),
-                        child: const Icon(
-                          Icons.settings_backup_restore_rounded,
-                          color: Colors.white54,
-                          size: 14.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(
+                              Icons.radar_rounded,
+                              color: Color(0xFF00F5D4),
+                              size: 16.0,
+                            ),
+                            SizedBox(width: 8.0),
+                            Flexible(
+                              child: Text(
+                                'PLANET TERRAFORMER v1.0',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white30,
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      // Settings/Wipe database command trigger
+                      GestureDetector(
+                        onTap: () => _showResetDialog(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.04),
+                            border: Border.all(color: Colors.white24),
+                          ),
+                          child: const Icon(
+                            Icons.settings_backup_restore_rounded,
+                            color: Colors.white54,
+                            size: 14.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -234,7 +283,12 @@ class _MainLayoutState extends State<MainLayout> {
   Widget _buildBottomNavigationBar() {
     return Container(
       color: Colors.black,
-      padding: const EdgeInsets.only(bottom: 12.0, top: 6.0, left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(
+        bottom: 12.0,
+        top: 6.0,
+        left: 16.0,
+        right: 16.0,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24.0),
         child: BackdropFilter(
@@ -244,18 +298,16 @@ class _MainLayoutState extends State<MainLayout> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.04),
               borderRadius: BorderRadius.circular(24.0),
-              border: Border.all(
-                color: Colors.white12,
-                width: 1.0,
-              ),
+              border: Border.all(color: Colors.white12, width: 1.0),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, Icons.construction_outlined, 'Mining'),
-                _buildNavItem(1, Icons.science_outlined, 'Reactor'),
-                _buildNavItem(2, Icons.public_outlined, 'Planet'),
+                _buildNavItem(0, Icons.storage_rounded, 'Storage'),
+                _buildNavItem(1, Icons.construction_outlined, 'Mining'),
+                _buildNavItem(2, Icons.science_outlined, 'Reactor'),
+                _buildNavItem(3, Icons.public_outlined, 'Planet'),
               ],
             ),
           ),
@@ -276,9 +328,14 @@ class _MainLayoutState extends State<MainLayout> {
         children: [
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFF00F5D4).withOpacity(0.08) : Colors.transparent,
+              color: isSelected
+                  ? const Color(0xFF00F5D4).withOpacity(0.08)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(16.0),
               boxShadow: isSelected
                   ? [
@@ -286,15 +343,11 @@ class _MainLayoutState extends State<MainLayout> {
                         color: const Color(0xFF00F5D4).withOpacity(0.1),
                         blurRadius: 10,
                         spreadRadius: 1,
-                      )
+                      ),
                     ]
                   : [],
             ),
-            child: Icon(
-              icon,
-              color: navColor,
-              size: 20.0,
-            ),
+            child: Icon(icon, color: navColor, size: 20.0),
           ),
           const SizedBox(height: 3.0),
           Text(
@@ -331,24 +384,37 @@ class _MainLayoutState extends State<MainLayout> {
                 SizedBox(width: 8.0),
                 Text(
                   'SYSTEM HARD RESET',
-                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Color(0xFFFF3838)),
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFF3838),
+                  ),
                 ),
               ],
             ),
             content: const Text(
               'This operation will wipe out all stockpiled resources, chemical reactor speeds, upgraded collectors, and planet metrics. Proceed with simulation reset?',
-              style: TextStyle(color: Colors.white70, fontSize: 11.5, height: 1.4),
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 11.5,
+                height: 1.4,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(),
-                child: const Text('ABORT', style: TextStyle(color: Colors.white38, fontSize: 11.0)),
+                child: const Text(
+                  'ABORT',
+                  style: TextStyle(color: Colors.white38, fontSize: 11.0),
+                ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF3838).withOpacity(0.2),
                   side: const BorderSide(color: Color(0xFFFF3838)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 onPressed: () {
                   gameState.resetProgress();
@@ -356,7 +422,11 @@ class _MainLayoutState extends State<MainLayout> {
                 },
                 child: const Text(
                   'WIPE DATA',
-                  style: TextStyle(color: Color(0xFFFF3838), fontSize: 11.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Color(0xFFFF3838),
+                    fontSize: 11.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

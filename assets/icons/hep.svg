@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <radialGradient id="pG" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#b7f0ff"/>
+      <stop offset="100%" stop-color="#2a9df4"/>
+    </radialGradient>
+    <linearGradient id="leafG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7CFF6B"/>
+      <stop offset="100%" stop-color="#1BBF5C"/>
+    </linearGradient>
+    <filter id="hepGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.3" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- planet -->
+  <g filter="url(#hepGlow)">
+    <circle cx="22" cy="24" r="10" fill="url(#pG)" stroke="#9fe8ff" stroke-width="0.7"/>
+    <path d="M16 22 C18 19 22 18 26 20" fill="none" stroke="#e6fbff" stroke-width="1" opacity="0.55" stroke-linecap="round"/>
+  </g>
+
+  <!-- leaf wrapping around the planet -->
+  <g filter="url(#hepGlow)">
+    <path d="M30 14 C36 18 36 30 28 34 C22 37 18 34 16 30 C15 27 16 24 19 22 C22 20 26 20 30 14 Z"
+          fill="url(#leafG)" stroke="#18a84d" stroke-width="0.7"/>
+    <path d="M21 30 C23 27 26 24 30 20" fill="none" stroke="#eafff0" stroke-width="0.9" opacity="0.6" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <radialGradient id="planet" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#c9fff4"/>
+      <stop offset="100%" stop-color="#2bd4c5"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#63d1ff"/>
+      <stop offset="50%" stop-color="#72efdd"/>
+      <stop offset="100%" stop-color="#63d1ff"/>
+    </linearGradient>
+    <filter id="atmGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- small planet -->
+  <g filter="url(#atmGlow)">
+    <circle cx="22" cy="24" r="9" fill="url(#planet)" stroke="#a9f0ff" stroke-width="0.7"/>
+    <path d="M16.5 23 C18 20.5 21.5 19.5 25 21" fill="none" stroke="#e6fbff" opacity="0.55" stroke-width="1" stroke-linecap="round"/>
+  </g>
+
+  <!-- atmospheric ring -->
+  <g filter="url(#atmGlow)">
+    <ellipse cx="26" cy="26" rx="14" ry="6" fill="none" stroke="url(#ring)" stroke-width="2.2" opacity="0.9"/>
+    <ellipse cx="26" cy="26" rx="14" ry="6" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+  </g>
+</svg>

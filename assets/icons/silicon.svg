@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="si" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c9fff4"/>
+      <stop offset="100%" stop-color="#4fc3ff"/>
+    </linearGradient>
+    <filter id="siGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- blue triangular crystal formation -->
+  <g filter="url(#siGlow)" fill="url(#si)" stroke="#1aa6d6" stroke-width="0.7">
+    <path d="M24 7 L35 20 L24 37 L13 20 Z" opacity="0.98"/>
+    <path d="M24 7 L29.5 20 L24 37 L18.5 20 Z" fill="#e6fbff" opacity="0.35" stroke="none"/>
+    <path d="M13 20 L24 21 L35 20" fill="none" stroke="#e6fbff" opacity="0.6" stroke-width="0.8"/>
+  </g>
+
+  <!-- cyan glow facet -->
+  <path d="M19 18 L24 12" stroke="#ffffff" opacity="0.35" stroke-width="1" stroke-linecap="round"/>
+</svg>

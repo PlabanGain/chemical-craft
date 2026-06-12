@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="ironGrad" x1="0" x2="1">
+      <stop offset="0%" stop-color="#6b6f75"/>
+      <stop offset="100%" stop-color="#2f3338"/>
+    </linearGradient>
+    <filter id="glo" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.6" result="b" />
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- irregular ore chunk silhouette -->
+  <g filter="url(#glo)">
+    <path d="M12 18 L20 12 L32 14 L36 22 L30 30 L18 32 L12 26 Z" fill="url(#ironGrad)" stroke="#111214" stroke-width="0.8"/>
+    <!-- metallic shine -->
+    <path d="M20 14 L28 16" stroke="#dfe6ec" stroke-width="0.9" opacity="0.35" stroke-linecap="round"/>
+  </g>
+</svg>

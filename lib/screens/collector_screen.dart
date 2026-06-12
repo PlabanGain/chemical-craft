@@ -14,7 +14,9 @@ class CollectorScreen extends StatelessWidget {
     return Consumer<GameState>(
       builder: (context, gameState, child) {
         // Filter out basic raw elements
-        final rawResources = gameState.resources.where((r) => !r.isRefined).toList();
+        final rawResources = gameState.resources
+            .where((r) => !r.isRefined)
+            .toList();
 
         return Stack(
           children: [
@@ -38,32 +40,41 @@ class CollectorScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
-                                  'EXTRACTION DECK',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.5,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'EXTRACTION DECK',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.5,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 3.0),
-                                Text(
-                                  'MANUAL FIRST MINER • UNLOCK AUTO MINERS WITH COINS',
-                                  style: TextStyle(
-                                    color: Color(0xFF00F5D4),
-                                    fontSize: 9.0,
-                                    letterSpacing: 0.8,
-                                    fontWeight: FontWeight.w600,
+                                  SizedBox(height: 3.0),
+                                  Text(
+                                    'MANUAL FIRST MINER • UNLOCK AUTO MINERS WITH COINS',
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Color(0xFF00F5D4),
+                                      fontSize: 9.0,
+                                      letterSpacing: 0.8,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.15,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
+                            const SizedBox(width: 8.0),
                             Container(
                               padding: const EdgeInsets.all(6.0),
                               decoration: BoxDecoration(
@@ -75,23 +86,27 @@ class CollectorScreen extends StatelessWidget {
                                 color: Color(0xFF00F5D4),
                                 size: 18.0,
                               ),
-                            )
+                            ),
                           ],
                         ),
                         const SizedBox(height: 12.0),
                         // Energy and coin status badges
-                        Row(
+                        Wrap(
+                          spacing: 10.0,
+                          runSpacing: 10.0,
                           children: [
-                            Expanded(
+                            SizedBox(
+                              width: 170.0,
                               child: NeonBadge(
                                 label: 'ENERGY',
-                                value: '${gameState.energy.toStringAsFixed(1)}/${gameState.maxEnergy.toStringAsFixed(0)}',
+                                value:
+                                    '${gameState.energy.toStringAsFixed(1)}/${gameState.maxEnergy.toStringAsFixed(0)}',
                                 color: const Color(0xFFFFD60A),
                                 icon: Icons.bolt,
                               ),
                             ),
-                            const SizedBox(width: 10.0),
-                            Expanded(
+                            SizedBox(
+                              width: 170.0,
                               child: NeonBadge(
                                 label: 'COINS',
                                 value: gameState.coins.toStringAsFixed(0),
@@ -108,12 +123,18 @@ class CollectorScreen extends StatelessWidget {
                   // Resource Cards Scrollable Grid
                   Expanded(
                     child: GridView.builder(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1, // Full-width cards for mobile layouts
-                        mainAxisSpacing: 16.0,
-                        childAspectRatio: 1.65,
+                      padding: const EdgeInsets.only(
+                        left: 16.0,
+                        right: 16.0,
+                        bottom: 24.0,
                       ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                1, // Full-width cards for mobile layouts
+                            mainAxisSpacing: 16.0,
+                            childAspectRatio: 1.65,
+                          ),
                       itemCount: rawResources.length,
                       itemBuilder: (context, index) {
                         final resource = rawResources[index];
@@ -127,15 +148,11 @@ class CollectorScreen extends StatelessWidget {
                         return ResourceCard(
                           resource: resource,
                           onMine: resource.unlocked
-                              ? () {
-                                  // Capture middle of screen to pop floats if tap coordinate missing
-                                  final renderBox = context.findRenderObject() as RenderBox?;
-                                  final size = renderBox?.size ?? const Size(300.0, 500.0);
-                                  final centerOffset = Offset(
-                                    size.width / 2,
-                                    size.height * 0.45,
+                              ? (Offset globalPos) {
+                                  gameState.extractResource(
+                                    resource.type,
+                                    position: globalPos,
                                   );
-                                  gameState.extractResource(resource.type, position: centerOffset);
                                 }
                               : null,
                           onUpgrade: () {
@@ -186,11 +203,8 @@ class FloatingTextWidget extends StatefulWidget {
   final String text;
   final Color color;
 
-  const FloatingTextWidget({
-    Key? key,
-    required this.text,
-    required this.color,
-  }) : super(key: key);
+  const FloatingTextWidget({Key? key, required this.text, required this.color})
+    : super(key: key);
 
   @override
   State<FloatingTextWidget> createState() => _FloatingTextWidgetState();

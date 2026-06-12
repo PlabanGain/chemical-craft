@@ -1,10 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../models/resource.dart';
+import 'resource_icon.dart';
 
 class ResourceCard extends StatelessWidget {
   final Resource resource;
-  final VoidCallback? onMine;
+  final void Function(Offset)? onMine;
   final VoidCallback? onUpgrade;
   final bool canUpgrade;
   final double upgradeCost;
@@ -25,7 +26,10 @@ class ResourceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeColor = Color(int.parse(resource.colorHex));
-    double capacityPercent = (resource.amount / resource.capacity).clamp(0.0, 1.0);
+    double capacityPercent = (resource.amount / resource.capacity).clamp(
+      0.0,
+      1.0,
+    );
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0),
@@ -35,10 +39,7 @@ class ResourceCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(16.0),
-            border: Border.all(
-              color: themeColor.withOpacity(0.25),
-              width: 1.5,
-            ),
+            border: Border.all(color: themeColor.withOpacity(0.25), width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: themeColor.withOpacity(0.04),
@@ -60,15 +61,12 @@ class ResourceCard extends StatelessWidget {
                       children: [
                         // Circular neon symbol badge
                         Container(
-                          width: 44,
-                          height: 44,
+                          width: 52,
+                          height: 52,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: themeColor.withOpacity(0.1),
-                            border: Border.all(
-                              color: themeColor,
-                              width: 1.5,
-                            ),
+                            border: Border.all(color: themeColor, width: 1.5),
                             boxShadow: [
                               BoxShadow(
                                 color: themeColor.withOpacity(0.2),
@@ -78,20 +76,9 @@ class ResourceCard extends StatelessWidget {
                             ],
                           ),
                           alignment: Alignment.center,
-                          child: Text(
-                            resource.symbol,
-                            style: TextStyle(
-                              color: themeColor,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'monospace',
-                              shadows: [
-                                Shadow(
-                                  color: themeColor,
-                                  blurRadius: 4.0,
-                                )
-                              ],
-                            ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ResourceIcon(type: resource.type, size: 40),
                           ),
                         ),
                         const SizedBox(width: 12.0),
@@ -116,16 +103,18 @@ class ResourceCard extends StatelessWidget {
                                 resource.isRefined
                                     ? 'Refined Compound'
                                     : (!resource.unlocked
-                                        ? 'Miner Locked'
-                                        : (resource.level == 0
-                                            ? 'Manual Miner'
-                                            : 'Auto Miners x${resource.level}')),
+                                          ? 'Miner Locked'
+                                          : (resource.level == 0
+                                                ? 'Manual Miner'
+                                                : 'Auto Miners x${resource.level}')),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: resource.isRefined
                                       ? const Color(0xFF72EFDD)
-                                      : (!resource.unlocked ? Colors.amberAccent : Colors.white70),
+                                      : (!resource.unlocked
+                                            ? Colors.amberAccent
+                                            : Colors.white70),
                                   fontSize: 11.0,
                                 ),
                               ),
@@ -159,13 +148,16 @@ class ResourceCard extends StatelessWidget {
                             Shadow(
                               color: themeColor.withOpacity(0.5),
                               blurRadius: 5,
-                            )
+                            ),
                           ],
                         ),
                       ),
                       Text(
                         '/ ${resource.capacity.toStringAsFixed(0)}',
-                        style: const TextStyle(color: Colors.white30, fontSize: 10.0),
+                        style: const TextStyle(
+                          color: Colors.white30,
+                          fontSize: 10.0,
+                        ),
                       ),
                     ],
                   ),
@@ -221,28 +213,40 @@ class ResourceCard extends StatelessWidget {
               // Control Actions row: Gather (Mine) & Upgrade Extractor
               Row(
                 children: [
-                  // Gather manually (onMine trigger)
+                  // Gather manually (onMine trigger) - MINE BUTTON
                   if (onMine != null)
                     Expanded(
                       flex: 4,
                       child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTapDown: (details) {
-                          onMine!();
+                          final global = details.globalPosition;
+                          onMine?.call(global);
                         },
                         child: Container(
                           height: 38,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [themeColor.withOpacity(0.2), themeColor.withOpacity(0.4)],
+                              colors: [
+                                themeColor.withOpacity(0.2),
+                                themeColor.withOpacity(0.4),
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: themeColor.withOpacity(0.6), width: 1.0),
+                            border: Border.all(
+                              color: themeColor.withOpacity(0.6),
+                              width: 1.0,
+                            ),
                           ),
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.bolt, size: 14.0, color: Colors.white),
+                              const Icon(
+                                Icons.bolt,
+                                size: 14.0,
+                                color: Colors.white,
+                              ),
                               const SizedBox(width: 4.0),
                               Text(
                                 resource.unlocked
@@ -275,15 +279,19 @@ class ResourceCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: canUpgrade
                                 ? (resource.unlocked
-                                    ? const Color(0xFF00F5D4).withOpacity(0.15)
-                                    : Colors.amber.withOpacity(0.15))
+                                      ? const Color(
+                                          0xFF00F5D4,
+                                        ).withOpacity(0.15)
+                                      : Colors.amber.withOpacity(0.15))
                                 : Colors.white10,
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
                               color: canUpgrade
                                   ? (resource.unlocked
-                                      ? const Color(0xFF00F5D4).withOpacity(0.5)
-                                      : Colors.amber.withOpacity(0.5))
+                                        ? const Color(
+                                            0xFF00F5D4,
+                                          ).withOpacity(0.5)
+                                        : Colors.amber.withOpacity(0.5))
                                   : Colors.white24,
                               width: 1.0,
                             ),
@@ -295,10 +303,14 @@ class ResourceCard extends StatelessWidget {
                               Text(
                                 !resource.unlocked
                                     ? 'UNLOCK MINER'
-                                    : (resource.level == 0 ? 'BUY AUTO MINER' : 'ADD AUTO MINER'),
+                                    : (resource.level == 0
+                                          ? 'BUY AUTO MINER'
+                                          : 'ADD AUTO MINER'),
                                 style: TextStyle(
                                   color: canUpgrade
-                                      ? (resource.unlocked ? const Color(0xFF00F5D4) : Colors.amberAccent)
+                                      ? (resource.unlocked
+                                            ? const Color(0xFF00F5D4)
+                                            : Colors.amberAccent)
                                       : Colors.white38,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10.0,
@@ -309,7 +321,9 @@ class ResourceCard extends StatelessWidget {
                                     ? 'Cost: ${upgradeCost.toStringAsFixed(0)} $upgradeCurrencySymbol'
                                     : 'Unlock: ${upgradeCost.toStringAsFixed(0)} $upgradeCurrencySymbol',
                                 style: TextStyle(
-                                  color: canUpgrade ? Colors.white70 : Colors.white24,
+                                  color: canUpgrade
+                                      ? Colors.white70
+                                      : Colors.white24,
                                   fontSize: 9.0,
                                 ),
                               ),

@@ -43,3 +43,29 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Platform specific generated config files
+**/android/local.properties
+**/android/key.properties
+**/*.keystore
+**/*.jks
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/macos/Flutter/Generated.xcconfig
+**/macos/Flutter/flutter_export_environment.sh
+
+# Miscellaneous & Temporary Files
+__temp_snippet.txt
+devtools_options.yaml
+.env
+.env.*
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Unused platforms (Android only is used)
+/ios/
+/linux/
+/macos/
+/web/
+/windows/

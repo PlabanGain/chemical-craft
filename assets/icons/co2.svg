@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <filter id="co2Glow" x="-55%" y="-55%" width="210%" height="210%">
+      <feGaussianBlur stdDeviation="1.9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="center" cx="35%" cy="35%">
+      <stop offset="0%" stop-color="#d9d9d9"/>
+      <stop offset="100%" stop-color="#8e8e8e"/>
+    </radialGradient>
+    <radialGradient id="side" cx="35%" cy="35%">
+      <stop offset="0%" stop-color="#6a6a6a"/>
+      <stop offset="100%" stop-color="#2f2f2f"/>
+    </radialGradient>
+  </defs>
+
+  <!-- CO2 molecule: dark side spheres + gray center -->
+  <g filter="url(#co2Glow)" stroke="#9a9a9a" stroke-width="0.6">
+    <circle cx="15" cy="24" r="6.5" fill="url(#side)"/>
+    <circle cx="24" cy="24" r="5.3" fill="url(#center)" stroke="#cfcfcf"/>
+    <circle cx="33" cy="24" r="6.5" fill="url(#side)"/>
+    <rect x="19.2" y="23" width="9.6" height="2" rx="1" fill="#bdbdbd" opacity="0.9" stroke="none"/>
+  </g>
+
+  <path d="M12 21 C14 18 18 18 20 20" fill="none" stroke="#ffffff" opacity="0.25" stroke-width="1" stroke-linecap="round"/>
+</svg>

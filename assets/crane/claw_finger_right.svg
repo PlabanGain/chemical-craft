@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="120" viewBox="0 0 80 120">
+  <defs>
+    <linearGradient id="metal" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="50%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0%" stop-color="#00f5d4"/>
+      <stop offset="100%" stop-color="#05b292"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer metallic curved finger -->
+  <path d="M 20,0 C 35,0 65,20 65,55 C 65,85 40,115 15,115 C 12,115 10,113 11,110 C 20,105 42,90 42,55 C 42,30 30,15 20,0 Z" fill="url(#metal)" stroke="#64748b" stroke-width="1.5"/>
+  
+  <!-- Industrial hazard stripes on the outer curve -->
+  <path d="M 48,25 L 38,22 L 45,35 L 55,38 Z" fill="#f59e0b"/>
+  <path d="M 60,50 L 50,45 L 54,60 L 64,63 Z" fill="#f59e0b"/>
+  <path d="M 58,75 L 48,70 L 50,85 L 60,88 Z" fill="#f59e0b"/>
+  
+  <!-- Inner glowing cyber blade/grip pad -->
+  <path d="M 42,55 C 42,75 32,92 20,102 C 28,94 36,78 36,55 C 36,38 31,24 26,15 C 33,26 42,40 42,55 Z" fill="url(#glow)" opacity="0.85"/>
+  
+  <!-- Hinge connector reinforcement at pivot -->
+  <circle cx="20" cy="0" r="10" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+  <circle cx="20" cy="0" r="4" fill="#0f172a"/>
+</svg>

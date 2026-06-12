@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="48" viewBox="0 0 240 48">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7b8dae"/>
+      <stop offset="1" stop-color="#5c6f8d"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="8" width="240" height="32" rx="16" fill="url(#g)"/>
+  <rect x="8" y="14" width="224" height="20" rx="10" fill="#44566f"/>
+  <rect x="0" y="8" width="240" height="32" rx="16" fill="none" stroke="#b9c8e6" stroke-width="1.6" opacity="0.5"/>
+  <g stroke="#d8e3ff" stroke-opacity="0.7" stroke-width="2">
+    <line x1="20" y1="16" x2="36" y2="32"/>
+    <line x1="36" y1="16" x2="52" y2="32"/>
+    <line x1="52" y1="16" x2="68" y2="32"/>
+    <line x1="68" y1="16" x2="84" y2="32"/>
+    <line x1="84" y1="16" x2="100" y2="32"/>
+    <line x1="100" y1="16" x2="116" y2="32"/>
+    <line x1="116" y1="16" x2="132" y2="32"/>
+    <line x1="132" y1="16" x2="148" y2="32"/>
+    <line x1="148" y1="16" x2="164" y2="32"/>
+    <line x1="164" y1="16" x2="180" y2="32"/>
+    <line x1="180" y1="16" x2="196" y2="32"/>
+    <line x1="196" y1="16" x2="212" y2="32"/>
+    <line x1="36" y1="32" x2="52" y2="16"/>
+    <line x1="52" y1="32" x2="68" y2="16"/>
+    <line x1="68" y1="32" x2="84" y2="16"/>
+    <line x1="84" y1="32" x2="100" y2="16"/>
+    <line x1="100" y1="32" x2="116" y2="16"/>
+    <line x1="116" y1="32" x2="132" y2="16"/>
+    <line x1="132" y1="32" x2="148" y2="16"/>
+    <line x1="148" y1="32" x2="164" y2="16"/>
+    <line x1="164" y1="32" x2="180" y2="16"/>
+    <line x1="180" y1="32" x2="196" y2="16"/>
+    <line x1="196" y1="32" x2="212" y2="16"/>
+  </g>
+  <rect x="10" y="20" width="220" height="4" rx="2" fill="#0f1a2a" opacity="0.6"/>
+  <circle cx="20" cy="24" r="6" fill="#00f5d4"/>
+  <circle cx="220" cy="24" r="6" fill="#00f5d4"/>
+</svg>

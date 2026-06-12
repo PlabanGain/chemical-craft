@@ -12,12 +12,19 @@ enum ResourceType {
   hep, // Habitable Environment Points
 }
 
+enum MaterialType {
+  solid, // Box storage (Iron, Silicon, Carbon, Steel)
+  liquid, // Test tube storage (Water Ice, Liquid Water)
+  gas, // Capped bottle storage (Oxygen, Nitrogen, CO2, Atmosphere)
+}
+
 class Resource {
   final ResourceType type;
   final String name;
   final String symbol;
   final String description;
   final bool isRefined;
+  final MaterialType materialType;
   bool unlocked;
   double amount;
   int level; // For upgrading auto-collection rates
@@ -30,6 +37,7 @@ class Resource {
     required this.symbol,
     required this.description,
     required this.isRefined,
+    required this.materialType,
     this.unlocked = true,
     this.amount = 0.0,
     this.level = 0,
@@ -40,15 +48,15 @@ class Resource {
   // Calculate rate based on level and baseline
   double get collectionRate => level * baseCollectionRate;
 
-  // Max storage capacity (can be upgraded as level progresses if needed, or simple cap of 9999)
-  double get capacity => 9999.0;
+  // Max storage capacity set to 100 units per material
+  double get capacity => 100.0;
 
   Map<String, dynamic> toJson() => {
-        'type': type.name,
-        'amount': amount,
-        'level': level,
-      'unlocked': unlocked,
-      };
+    'type': type.name,
+    'amount': amount,
+    'level': level,
+    'unlocked': unlocked,
+  };
 
   factory Resource.fromJson(Map<String, dynamic> json, Resource template) {
     final savedLevel = json['level'] as int? ?? template.level;
@@ -58,7 +66,9 @@ class Resource {
       symbol: template.symbol,
       description: template.description,
       isRefined: template.isRefined,
-      unlocked: json['unlocked'] as bool? ?? (template.unlocked || savedLevel > 0),
+      materialType: template.materialType,
+      unlocked:
+          json['unlocked'] as bool? ?? (template.unlocked || savedLevel > 0),
       amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       level: savedLevel,
       baseCollectionRate: template.baseCollectionRate,
@@ -73,6 +83,7 @@ class Resource {
       symbol: symbol,
       description: description,
       isRefined: isRefined,
+      materialType: materialType,
       unlocked: unlocked,
       amount: amount ?? this.amount,
       level: level ?? this.level,
@@ -90,6 +101,7 @@ class Resource {
         symbol: 'Fe',
         description: 'Crucial metallic element extracted from rust-plains.',
         isRefined: false,
+        materialType: MaterialType.solid,
         unlocked: true,
         amount: 0.0,
         level: 0, // Manual mining only at the start
@@ -102,6 +114,7 @@ class Resource {
         symbol: 'Si',
         description: 'Semi-metallic crystal used in electronics and shields.',
         isRefined: false,
+        materialType: MaterialType.solid,
         unlocked: false,
         amount: 0.0,
         level: 0,
@@ -114,6 +127,7 @@ class Resource {
         symbol: 'H₂O Ice',
         description: 'Frozen water glaciers mined from polar caps.',
         isRefined: false,
+        materialType: MaterialType.liquid,
         unlocked: false,
         amount: 0.0,
         level: 0,
@@ -126,6 +140,7 @@ class Resource {
         symbol: 'C',
         description: 'Organic soot mined from ancient volcanic craters.',
         isRefined: false,
+        materialType: MaterialType.solid,
         unlocked: false,
         amount: 0.0,
         level: 0,
@@ -138,6 +153,7 @@ class Resource {
         symbol: 'O₂',
         description: 'Vital gas extracted from the planet\'s thin crust.',
         isRefined: false,
+        materialType: MaterialType.gas,
         unlocked: false,
         amount: 0.0,
         level: 0,
@@ -150,6 +166,7 @@ class Resource {
         symbol: 'N₂',
         description: 'Inert atmospheric buffer gathered from high orbit.',
         isRefined: false,
+        materialType: MaterialType.gas,
         unlocked: false,
         amount: 0.0,
         level: 0,
@@ -163,6 +180,7 @@ class Resource {
         symbol: 'H₂O',
         description: 'Refined water to fill oceans and sustain bio-life.',
         isRefined: true,
+        materialType: MaterialType.liquid,
         unlocked: true,
         amount: 0.0,
         level: 0,
@@ -175,6 +193,7 @@ class Resource {
         symbol: 'CO₂',
         description: 'Greenhouse gas designed to warm up the icy planet.',
         isRefined: true,
+        materialType: MaterialType.gas,
         unlocked: true,
         amount: 0.0,
         level: 0,
@@ -185,8 +204,10 @@ class Resource {
         type: ResourceType.steel,
         name: 'Steel Alloy',
         symbol: 'Steel',
-        description: 'Refined steel alloy used in heavy terraforming machinery.',
+        description:
+            'Refined steel alloy used in heavy terraforming machinery.',
         isRefined: true,
+        materialType: MaterialType.solid,
         unlocked: true,
         amount: 0.0,
         level: 0,
@@ -199,6 +220,7 @@ class Resource {
         symbol: 'Atmosphere',
         description: 'Thick atmospheric blanket to block radiation.',
         isRefined: true,
+        materialType: MaterialType.gas,
         unlocked: true,
         amount: 0.0,
         level: 0,
@@ -211,6 +233,7 @@ class Resource {
         symbol: 'HEP',
         description: 'Ultimate chemical catalyst to accelerate biosigns.',
         isRefined: true,
+        materialType: MaterialType.solid,
         unlocked: true,
         amount: 0.0,
         level: 0,
